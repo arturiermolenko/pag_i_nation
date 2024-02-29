@@ -33,18 +33,21 @@ def pagination(
 
 
 def validate_data(current_page: int, total_pages: int, boundaries: int, around: int):
-    """Checking, if arguments are valid before creating result"""
+
+    # First checking if all args are integers
+    for arg_name, value in locals().items():
+        if not isinstance(value, int):
+            print(f"{arg_name} is not an integer")
+            return
+
+    # Checking other critical conditions
     conditions = {
-        "Current page should be integer": not isinstance(current_page, int),
-        "Total pages should be integer": not isinstance(total_pages, int),
-        "Boundaries should be integer": not isinstance(boundaries, int),
-        "Around should be integer": not isinstance(around, int),
         "Current page should be greater than 1": current_page < 1,
         "Current page cannot be greater than total_pages": current_page > total_pages,
         "Boundaries could not be less then 0": boundaries < 0,
         "Around could not be less then 0": around < 0,
-        "Boundaries should not be greater than total_pages.": boundaries > total_pages,
-        "Around should not be greater than total_pages.": around > total_pages
+        "Boundaries should not be greater than total_pages": boundaries > total_pages,
+        "Around should not be greater than total_pages": around > total_pages
     }
 
     for message, condition in conditions.items():
@@ -64,3 +67,13 @@ if __name__ == "__main__":
         )
     except ValueError:
         print("Invalid value type. Use numbers only, please.")
+
+    # If you are don`t want to use inputs - remove try/except block,
+    # uncomment next lines and use your values
+
+    # pagination(
+    #     current_page=5,
+    #     total_pages=10,
+    #     boundaries=2,
+    #     around=0
+    # )

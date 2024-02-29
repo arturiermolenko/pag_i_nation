@@ -10,32 +10,32 @@ class PaginationTests(unittest.TestCase):
 
     def test_current_page_not_integer(self):
         pagination(current_page=2.8, total_pages=10)
-        test_result = "Current page should be integer"
+        test_result = "current_page is not an integer"
         self.assertEqual(sys.stdout.getvalue().strip(), test_result)
 
     def test_total_pages_not_integer(self):
         pagination(current_page=2, total_pages=10.6)
-        test_result = "Total pages should be integer"
+        test_result = "total_pages is not an integer"
         self.assertEqual(sys.stdout.getvalue().strip(), test_result)
 
     def test_boundaries_not_integer(self):
         pagination(current_page=2, total_pages=10, boundaries=2.4)
-        test_result = "Boundaries should be integer"
+        test_result = "boundaries is not an integer"
         self.assertEqual(sys.stdout.getvalue().strip(), test_result)
 
     def test_around_not_integer(self):
         pagination(current_page=2, total_pages=10, around=1.1)
-        test_result = "Around should be integer"
+        test_result = "around is not an integer"
         self.assertEqual(sys.stdout.getvalue().strip(), test_result)
 
     def test_huge_boundaries(self):
         pagination(current_page=2, total_pages=10, boundaries=999999)
-        test_result = "Boundaries should not be greater than total_pages."
+        test_result = "Boundaries should not be greater than total_pages"
         self.assertEqual(sys.stdout.getvalue().strip(), test_result)
 
     def test_huge_amount(self):
         pagination(current_page=2, total_pages=10, around=999999)
-        test_result = "Around should not be greater than total_pages."
+        test_result = "Around should not be greater than total_pages"
         self.assertEqual(sys.stdout.getvalue().strip(), test_result)
 
     def test_current_page_equals_null(self):
