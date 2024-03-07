@@ -4,57 +4,68 @@ def pagination(
     if not validate_data(current_page, total_pages, boundaries, around):
         return
 
-    result = ""
+    if total_pages < (boundaries + around) * 2:
+        result = " ".join(str(page) for page in range(1, total_pages + 1))
+        print(result)
+        return
+
     start_around = max(1, current_page - around)
     end_around = min(total_pages, current_page + around)
+    result = ""
 
-    # adding boundary at start
-    for page in range(1, min(total_pages, boundaries) + 1):
-        if page < start_around or page > end_around:
-            result += str(page) + " "
+    # adding boundary at the beginning
+    result += add_pages_in_range(start=1, end=boundaries + 1)
 
     # adding ... before start_around if needed
     if start_around > boundaries + 1:
         result += "... "
 
     # adding current page with around
-    for page in range(start_around, end_around + 1):
-        result += str(page) + " "
+    if boundaries >= start_around:
+        result += add_pages_in_range(start=boundaries + 1, end=end_around + 1)
+    else:
+        result += add_pages_in_range(
+            start=min(start_around, total_pages - boundaries + 1),
+            end=end_around + 1)
 
     # adding ... after end_around if needed
     if end_around < total_pages - boundaries:
         result += "... "
 
     # adding boundary at the end
-    for page in range(max(total_pages - boundaries, end_around) + 1, total_pages + 1):
-        result += str(page) + " "
+    result += add_pages_in_range(
+        start=max(total_pages - boundaries, end_around) + 1,
+        end=total_pages + 1
+    )
 
-    print(result)
+    print(result.strip())
 
 
-def validate_data(current_page: int, total_pages: int, boundaries: int, around: int):
-
-    # First checking if all args are integers
+def validate_data(current_page: int, total_pages: int, boundaries: int, around: int) -> bool:
     for arg_name, value in locals().items():
         if not isinstance(value, int):
             print(f"{arg_name} is not an integer")
-            return
+            return False
 
-    # Checking other critical conditions
     conditions = {
         "Current page should be greater than 1": current_page < 1,
         "Current page cannot be greater than total_pages": current_page > total_pages,
         "Boundaries could not be less then 0": boundaries < 0,
-        "Around could not be less then 0": around < 0,
-        "Boundaries should not be greater than total_pages": boundaries > total_pages,
-        "Around should not be greater than total_pages": around > total_pages
+        "Around could not be less then 0": around < 0
     }
 
     for message, condition in conditions.items():
         if condition:
             print(message)
-            return
+            return False
     return True
+
+
+def add_pages_in_range(start: int, end: int) -> str:
+    result = ""
+    for page in range(start, end):
+        result += str(page) + " "
+    return result
 
 
 if __name__ == "__main__":
@@ -67,13 +78,3 @@ if __name__ == "__main__":
         )
     except ValueError:
         print("Invalid value type. Use numbers only, please.")
-
-    # If you are don`t want to use inputs - remove try/except block,
-    # uncomment next lines and use your values
-
-    # pagination(
-    #     current_page=5,
-    #     total_pages=10,
-    #     boundaries=2,
-    #     around=0
-    # )
